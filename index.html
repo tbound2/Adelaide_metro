@@ -1,25 +1,41 @@
-<script>
-  const stopId = 12434;
-  const apiUrl = `https://corsproxy.io/?https://api.adelaidemetro.com.au/v2/realtime/stop/${stopId}`;
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Adelaide Metro - Real Time Transport</title>
+</head>
+<body>
+  <h1>Live Adelaide Metro Updates – Powered by GitHub Pages!</h1>
+  <p>This website will show live updates for buses, trams, and trains in Adelaide.</p>
 
-  fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-      const departures = data.departures || [];
-      const list = document.getElementById('departures');
-      list.innerHTML = '';
-      if (departures.length === 0) {
-        list.innerHTML = '<li>No departures found.</li>';
-        return;
-      }
-      departures.forEach(dep => {
-        const li = document.createElement('li');
-        li.textContent = `${dep.routeShortName || dep.routeId} to ${dep.destination} in ${dep.departureMinutes} min`;
-        list.appendChild(li);
+  <h2>Next Departures for Stop 12434</h2>
+  <ul id="departures">
+    <li>Loading...</li>
+  </ul>
+
+  <script>
+    const stopId = 12434;
+    const apiUrl = `https://corsproxy.io/?https://api.adelaidemetro.com.au/v2/realtime/stop/${stopId}`;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const departures = data.departures || [];
+        const list = document.getElementById('departures');
+        list.innerHTML = '';
+        if (departures.length === 0) {
+          list.innerHTML = '<li>No departures found.</li>';
+          return;
+        }
+        departures.forEach(dep => {
+          const li = document.createElement('li');
+          li.textContent = `${dep.routeShortName || dep.routeId} to ${dep.destination} in ${dep.departureMinutes} min`;
+          list.appendChild(li);
+        });
+      })
+      .catch(error => {
+        document.getElementById('departures').innerHTML = '<li>Could not fetch data.</li>';
+        console.error(error);
       });
-    })
-    .catch(error => {
-      document.getElementById('departures').innerHTML = '<li>Could not fetch data.</li>';
-      console.error(error);
-    });
-</script>
+  </script>
+</body>
+</html>
